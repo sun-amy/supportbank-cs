@@ -1,0 +1,14 @@
+C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\obj\Debug\net8.0\SupportBank.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\obj\Debug\net8.0\SupportBank.AssemblyInfoInputs.cache
+C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\obj\Debug\net8.0\SupportBank.AssemblyInfo.cs
+C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\obj\Debug\net8.0\SupportBank.csproj.CoreCompileInputs.cache
+C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\bin\Debug\net8.0\SupportBank.exe
+C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\bin\Debug\net8.0\SupportBank.deps.json
+C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\bin\Debug\net8.0\SupportBank.runtimeconfig.json
+C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\bin\Debug\net8.0\SupportBank.dll
+C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\bin\Debug\net8.0\SupportBank.pdb
+C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\obj\Debug\net8.0\SupportBank.dll
+C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\obj\Debug\net8.0\refint\SupportBank.dll
+C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\obj\Debug\net8.0\SupportBank.pdb
+C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\obj\Debug\net8.0\SupportBank.genruntimeconfig.cache
+C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\obj\Debug\net8.0\ref\SupportBank.dll
