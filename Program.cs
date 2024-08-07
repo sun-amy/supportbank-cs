@@ -1,4 +1,6 @@
-﻿namespace SupportBank
+﻿using System.Formats.Asn1;
+
+namespace SupportBank
 {
     class Program
     {
@@ -76,7 +78,10 @@
                 float owesTotal = 0;
                 foreach (Transactions transaction in transactionsClassArray)
                 {
-                    if (transaction.To == Name) {
+                    if (transaction.Amount == null) {
+                        continue;
+                    }
+                    else if (transaction.To == Name) {
                         owesTotal += float.Parse(transaction.Amount);
                     }
                 }
@@ -87,7 +92,10 @@
                 float owedTotal = 0;
                 foreach (Transactions transaction in transactionsClassArray)
                 {
-                    if (transaction.From == Name) {
+                    if (transaction.Amount == null) {
+                        continue;
+                    }
+                    else if (transaction.From == Name) {
                         owedTotal += float.Parse(transaction.Amount);
                     }
                 }
