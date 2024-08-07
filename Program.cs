@@ -1,4 +1,5 @@
 ﻿using System.Formats.Asn1;
+using System.Globalization;
 
 namespace SupportBank
 {
@@ -58,10 +59,48 @@ namespace SupportBank
                 personClassArray = [.. personClassArray, person];
             }
 
-            foreach (Person person in personClassArray) {
-                Console.WriteLine(person.Name + " owes £" + person.Owes() + " and is owed £" + person.Owed() + ".");
+            static string ToTitleCase(string input)
+            {
+                TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
+                return textInfo.ToTitleCase(input);
             }
-        
+
+            Console.WriteLine("Welcome to the Support Bank program!");
+            Console.Write("Please enter 'all' to see all accounts, or enter a name to see all relevent transactions: ");
+            string? userInput = Console.ReadLine();
+
+            if (userInput != null) {
+                if (userInput.ToLower() == "all") {
+                    foreach (Person person in personClassArray) {
+                    Console.WriteLine(person.Name + "\nOwes: £" + person.Owes() + "\nIs owed: £" + person.Owed() + "\n");
+                    }  
+                // } else if (peopleName.Contains(ToTitleCase(userInput))) {
+                //     foreach (Transactions transaction in transactionsClassArray) {
+                //         if (transaction.From == ToTitleCase(userInput)) {
+                //             Console.WriteLine("date:" + transaction.Date + "\tfrom:" + transaction.From + "\tto:" + transaction.To + "\tnarrative:" + transaction.Narrative);
+                //         }
+                //         if (transaction.To == ToTitleCase(userInput)) {
+                //             Console.WriteLine("date:" + transaction.Date + "\tfrom:" + transaction.From + "\tto:" + transaction.To + "\tnarrative:" + transaction.Narrative);
+                //         }
+                //     }
+
+                } else if (peopleName.Contains(ToTitleCase(userInput.ToLower()))) {
+                    Console.WriteLine("************************* Money lent *************************");
+                    foreach (Transactions transaction in transactionsClassArray) {
+                        if (transaction.From == ToTitleCase(userInput.ToLower())) {
+                            Console.WriteLine("date: " + transaction.Date + "\tfrom: " + transaction.From + "\tto: " + transaction.To + "\tnarrative: " + transaction.Narrative);
+                        }
+                    }
+                    Console.WriteLine("\n************************* Money borrowed *************************");
+                    foreach (Transactions transaction in transactionsClassArray) {
+                        if (transaction.To == ToTitleCase(userInput.ToLower())) {
+                            Console.WriteLine("date: " + transaction.Date + "\tfrom: " + transaction.From + "\tto: " + transaction.To + "\tnarrative: " + transaction.Narrative);
+                        }
+                    }
+                } else {
+                    Console.Write("Invalid input.");
+                }
+            } 
         }                 
         public class Transactions {
                 public string? Date { get; set; }
