@@ -12,3 +12,4 @@ C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\Supp
 C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\obj\Debug\net8.0\SupportBank.pdb
 C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\obj\Debug\net8.0\SupportBank.genruntimeconfig.cache
 C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\obj\Debug\net8.0\ref\SupportBank.dll
+C:\Users\AmySun\OneDrive - Softwire Technology Limited\Documents\TechSwitch\SupportBank\obj\Debug\net8.0\SupportBank.sourcelink.json
