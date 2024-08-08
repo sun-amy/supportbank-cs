@@ -1,0 +1,17 @@
+2024-08-08 14:32:13.4081 Debug - SupportBank.Program: This is an error message
+2024-08-08 14:37:45.6987 Debug - SupportBank.Program: This is an error message
+2024-08-08 14:37:49.7308 Info - SupportBank.Program: Invalid input from the user.
+2024-08-08 14:43:47.3735 Debug - SupportBank.Program: This is an error message
+2024-08-08 14:44:48.1059 Debug - SupportBank.Program: This is an error message
+2024-08-08 15:11:14.4289 Error - SupportBank.Program+Person: Transaction amount in data is not a float
+2024-08-08 15:11:14.4696 Error - SupportBank.Program+Person: Transaction amount in data is not a float
+2024-08-08 15:13:24.0471 Error - SupportBank.Program+Person: Transaction amount in data is not a float
+2024-08-08 15:13:24.0749 Error - SupportBank.Program+Person: Transaction amount in data is not a float
+2024-08-08 15:28:32.7767 Error - SupportBank.Program: The amount is not a number.
+2024-08-08 15:29:02.9689 Error - SupportBank.Program: Date is not in a valid format.
+2024-08-08 15:30:37.0556 Error - SupportBank.Program: Date is not in a valid format.
+2024-08-08 15:32:15.1339 Error - SupportBank.Program: Date is not in a valid format.
+2024-08-08 15:32:48.2658 Error - SupportBank.Program: Date is not in a valid format.
+2024-08-08 15:35:41.4436 Error - SupportBank.Program: Date is not in a valid format.
+2024-08-08 15:35:52.0942 Error - SupportBank.Program: The amount is not a number.
+2024-08-08 15:36:49.8625 Error - SupportBank.Program: The amount is not a number.
