@@ -1,9 +1,9 @@
-﻿using System.Formats.Asn1;
-using System.Globalization;
-using System;
+﻿using System.Globalization;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
+using System.Text.Json;
+using System.Transactions;
 
 namespace SupportBank
 {
@@ -13,6 +13,7 @@ namespace SupportBank
 
         static IList<Transactions> transactionsClassArray = new List<Transactions>{};
 
+        static IList<TransactionsJson> transactionsClassArrayJson = new List<TransactionsJson>{};
         static IList<Person> personClassArray = new List<Person>{};
         static void Main(string[] args)
         {
@@ -22,45 +23,61 @@ namespace SupportBank
             config.AddTarget("File Logger", target);
             config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, target));
             LogManager.Configuration = config;
-            // Logger.Debug("This is an error message");
             
             string transactionsStr;
-            string filePath = @"DodgyTransactions2015.csv";
+            string filePath = @"Transactions2013.json";
 
             using (StreamReader reader = new StreamReader(filePath)) 
             {
                 transactionsStr = reader.ReadToEnd();
             }
 
-
-            string[] transactionsArray = transactionsStr.Split("\n");
-            List<string> transactionsList = new List<string>(transactionsArray);
-            transactionsList.RemoveAt(0);
-
-            string[][] payments = [];
-
-            foreach(string payment in transactionsList)
-            {
-                payments = [.. payments, payment.Split(",")];
-            }
-
-            for (var i = 0; i < payments.Length; i++)
-            {
-                var payment = new Transactions {Date = payments[i][0], From = payments[i][1], To = payments[i][2], Narrative = payments[i][3], Amount = payments[i][4]};
-                transactionsClassArray = [.. transactionsClassArray, payment];
-            }
-
             string[] peopleName = [];
 
-            foreach(string[] payment in payments) {
-                if (!peopleName.Contains(payment[1])) {
-                    peopleName = [.. peopleName, payment[1]];
+            if (filePath.Substring(filePath.Length - 4) == ".csv")
+            {
+                string[] transactionsArray = transactionsStr.Split("\n");
+                List<string> transactionsList = new List<string>(transactionsArray);
+                transactionsList.RemoveAt(0);
+
+                string[][] payments = [];
+
+                foreach(string payment in transactionsList)
+                {
+                    payments = [.. payments, payment.Split(",")];
                 }
-                if (!peopleName.Contains(payment[2])) {
-                    peopleName = [.. peopleName, payment[2]];
+
+                for (var i = 0; i < payments.Length; i++)
+                {
+                    var payment = new Transactions {Date = payments[i][0], FromAccount = payments[i][1], ToAccount = payments[i][2], Narrative = payments[i][3], Amount = payments[i][4]};
+                    transactionsClassArray = [.. transactionsClassArray, payment];
+                }
+
+                foreach(string[] payment in payments) {
+                    if (!peopleName.Contains(payment[1])) {
+                        peopleName = [.. peopleName, payment[1]];
+                    }
+                    if (!peopleName.Contains(payment[2])) {
+                        peopleName = [.. peopleName, payment[2]];
+                    }
                 }
             }
-            
+            else if (filePath.Substring(filePath.Length - 5) == ".json")
+            {
+                List<TransactionsJson>? transactionsClassArrayJson = JsonSerializer.Deserialize<List<TransactionsJson>>(transactionsStr);
+                if (transactionsClassArrayJson != null) {
+                    foreach (TransactionsJson transaction in transactionsClassArrayJson) {
+                        if (transaction.FromAccount != null && !peopleName.Contains(transaction.FromAccount)) {
+                            peopleName = [.. peopleName, transaction.FromAccount];
+                        }
+                        if (transaction.ToAccount != null &&!peopleName.Contains(transaction.ToAccount)) {
+                            peopleName = [.. peopleName, transaction.ToAccount];
+                        }
+                    }
+
+                }
+            }
+
             for (var i = 0; i < peopleName.Length; i++)
             {
                 var person = new Person {Name = peopleName[i]};
@@ -85,32 +102,65 @@ namespace SupportBank
 
                 } else if (peopleName.Contains(ToTitleCase(userInput.ToLower()))) {
                     Console.WriteLine("************************* Money lent *************************");
-                    foreach (Transactions transaction in transactionsClassArray) {
-                        if (transaction.From == ToTitleCase(userInput.ToLower())) {
-                            if(DateTime.TryParse(transaction.Date, out DateTime resultDate) && float.TryParse(transaction.Amount, out float resultAmount))  {
-                                Console.WriteLine(resultDate.ToShortDateString() + "\tfrom: " + transaction.From + "\tto: " + transaction.To + "\tnarrative: " + transaction.Narrative+ "\tamount: £" + resultAmount);
-                            } else if (DateTime.TryParse(transaction.Date, out DateTime result)) {
-                                Console.WriteLine(resultDate.ToShortDateString() + "\tfrom: " + transaction.From + "\tto: " + transaction.To + "\tnarrative: " + transaction.Narrative+ "\tamount is invalid");
-                                Logger.Error("The amount is not a number.");
-                            } else 
-                            {
-                                Console.WriteLine("Date is invalid" + "\tfrom: " + transaction.From + "\tto: " + transaction.To + "\tnarrative: " + transaction.Narrative+ "\tamount: £" + transaction.Amount);
-                                Logger.Error("Date is not in a valid format.");
+                    if (filePath.Substring(filePath.Length - 4) == ".csv") {
+                        foreach (Transactions transaction in transactionsClassArray) {
+                            if (transaction.FromAccount == ToTitleCase(userInput.ToLower())) {
+                                if(DateTime.TryParse(transaction.Date, out DateTime resultDate) && float.TryParse(transaction.Amount, out float resultAmount))  {
+                                    Console.WriteLine(resultDate.ToShortDateString() + "\tfrom: " + transaction.FromAccount + "\tto: " + transaction.ToAccount + "\tnarrative: " + transaction.Narrative+ "\tamount: £" + resultAmount);
+                                } else if (DateTime.TryParse(transaction.Date, out DateTime result)) {
+                                    Console.WriteLine(resultDate.ToShortDateString() + "\tfrom: " + transaction.FromAccount + "\tto: " + transaction.ToAccount + "\tnarrative: " + transaction.Narrative+ "\tamount is invalid");
+                                    Logger.Error("The amount is not a number.");
+                                } else 
+                                {
+                                    Console.WriteLine("Date is invalid" + "\tfrom: " + transaction.FromAccount + "\tto: " + transaction.ToAccount + "\tnarrative: " + transaction.Narrative+ "\tamount: £" + transaction.Amount);
+                                    Logger.Error("Date is not in a valid format.");
+                                }
+                            }
+                        }
+                        Console.WriteLine("\n************************* Money borrowed *************************");
+                        foreach (Transactions transaction in transactionsClassArray) {
+                            if (transaction.ToAccount == ToTitleCase(userInput.ToLower())) {
+                                if(DateTime.TryParse(transaction.Date, out DateTime resultDate) && float.TryParse(transaction.Amount, out float resultAmount))  {
+                                    Console.WriteLine(resultDate.ToShortDateString() + "\tfrom: " + transaction.FromAccount + "\tto: " + transaction.ToAccount + "\tnarrative: " + transaction.Narrative+ "\tamount: £" + resultAmount);
+                                } else if (DateTime.TryParse(transaction.Date, out DateTime result)) {
+                                    Console.WriteLine(resultDate.ToShortDateString() + "\tfrom: " + transaction.FromAccount + "\tto: " + transaction.ToAccount + "\tnarrative: " + transaction.Narrative+ "\tamount is invalid");
+                                    Logger.Error("The amount is not a number.");
+                                } else 
+                                {
+                                    Console.WriteLine("Date is invalid" + "\tfrom: " + transaction.FromAccount + "\tto: " + transaction.ToAccount + "\tnarrative: " + transaction.Narrative+ "\tamount: £" + transaction.Amount);
+                                    Logger.Error("Date is not in a valid format.");
+                                }
                             }
                         }
                     }
-                    Console.WriteLine("\n************************* Money borrowed *************************");
-                    foreach (Transactions transaction in transactionsClassArray) {
-                        if (transaction.To == ToTitleCase(userInput.ToLower())) {
-                            if(DateTime.TryParse(transaction.Date, out DateTime resultDate) && float.TryParse(transaction.Amount, out float resultAmount))  {
-                                Console.WriteLine(resultDate.ToShortDateString() + "\tfrom: " + transaction.From + "\tto: " + transaction.To + "\tnarrative: " + transaction.Narrative+ "\tamount: £" + resultAmount);
-                            } else if (DateTime.TryParse(transaction.Date, out DateTime result)) {
-                                Console.WriteLine(resultDate.ToShortDateString() + "\tfrom: " + transaction.From + "\tto: " + transaction.To + "\tnarrative: " + transaction.Narrative+ "\tamount is invalid");
-                                Logger.Error("The amount is not a number.");
-                            } else 
-                            {
-                                Console.WriteLine("Date is invalid" + "\tfrom: " + transaction.From + "\tto: " + transaction.To + "\tnarrative: " + transaction.Narrative+ "\tamount: £" + transaction.Amount);
-                                Logger.Error("Date is not in a valid format.");
+                    else if(filePath.Substring(filePath.Length - 5) == ".json") {
+                        foreach (TransactionsJson transaction in transactionsClassArrayJson) {
+                            if (transaction.FromAccount == ToTitleCase(userInput.ToLower())) {
+                                // if(DateTime.TryParse(transaction.Date, out DateTime resultDate) && float.TryParse(transaction.Amount, out float resultAmount))  {
+                                //     Console.WriteLine(resultDate.ToShortDateString() + "\tfrom: " + transaction.FromAccount + "\tto: " + transaction.ToAccount + "\tnarrative: " + transaction.Narrative+ "\tamount: £" + resultAmount);
+                                // } else if (DateTime.TryParse(transaction.Date, out DateTime result)) {
+                                //     Console.WriteLine(resultDate.ToShortDateString() + "\tfrom: " + transaction.FromAccount + "\tto: " + transaction.ToAccount + "\tnarrative: " + transaction.Narrative+ "\tamount is invalid");
+                                //     Logger.Error("The amount is not a number.");
+                                // } else 
+                                // {
+                                    Console.WriteLine("Date is invalid" + "\tfrom: " + transaction.FromAccount + "\tto: " + transaction.ToAccount + "\tnarrative: " + transaction.Narrative+ "\tamount: £" + transaction.Amount);
+                                    Logger.Error("Date is not in a valid format.");
+                                // }
+                            }
+                        }
+                        Console.WriteLine("\n************************* Money borrowed *************************");
+                        foreach (TransactionsJson transaction in transactionsClassArrayJson) {
+                            if (transaction.ToAccount == ToTitleCase(userInput.ToLower())) {
+                                // if(DateTime.TryParse(transaction.Date, out DateTime resultDate) && float.TryParse(transaction.Amount, out float resultAmount))  {
+                                //     Console.WriteLine(resultDate.ToShortDateString() + "\tfrom: " + transaction.FromAccount + "\tto: " + transaction.ToAccount + "\tnarrative: " + transaction.Narrative+ "\tamount: £" + resultAmount);
+                                // } else if (DateTime.TryParse(transaction.Date, out DateTime result)) {
+                                //     Console.WriteLine(resultDate.ToShortDateString() + "\tfrom: " + transaction.FromAccount + "\tto: " + transaction.ToAccount + "\tnarrative: " + transaction.Narrative+ "\tamount is invalid");
+                                //     Logger.Error("The amount is not a number.");
+                                // } else 
+                                // {
+                                    Console.WriteLine("Date is invalid" + "\tfrom: " + transaction.FromAccount + "\tto: " + transaction.ToAccount + "\tnarrative: " + transaction.Narrative+ "\tamount: £" + transaction.Amount);
+                                    Logger.Error("Date is not in a valid format.");
+                                // }
                             }
                         }
                     }
@@ -123,10 +173,19 @@ namespace SupportBank
         public class Transactions {
             private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
             public string? Date { get; set; }
-            public string? From { get; set; }
-            public string? To { get; set; }
+            public string? FromAccount { get; set; }
+            public string? ToAccount { get; set; }
             public string? Narrative { get; set; }
             public string? Amount { get; set; }
+            }
+            
+            public class TransactionsJson {
+            private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
+            public string? Date { get; set; }
+            public string? FromAccount { get; set; }
+            public string? ToAccount { get; set; }
+            public string? Narrative { get; set; }
+            public float? Amount { get; set; }
             }
 
         public class Person {
@@ -140,7 +199,7 @@ namespace SupportBank
                     if ( transaction.Amount == null ) {
                         continue;
                     }
-                    else if (transaction.To == Name) {
+                    else if (transaction.ToAccount == Name) {
                         if(float.TryParse(transaction.Amount, out float result)) 
                         {
                             owesTotal += result;
@@ -161,7 +220,7 @@ namespace SupportBank
                     if (transaction.Amount == null) {
                         continue;
                     }
-                    else if (transaction.From == Name) {
+                    else if (transaction.FromAccount == Name) {
                         if(float.TryParse(transaction.Amount, out float result)) 
                         {
                             owedTotal += result;

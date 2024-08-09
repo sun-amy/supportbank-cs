@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "3N5OgCLvRac=",
+  "dgSpecHash": "NWofsS2m7xY=",
   "success": true,
   "projectFilePath": "C:\\Users\\AmySun\\OneDrive - Softwire Technology Limited\\Documents\\TechSwitch\\SupportBank\\SupportBank.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\AmySun\\.nuget\\packages\\nlog\\5.3.2\\nlog.5.3.2.nupkg.sha512"
+    "C:\\Users\\AmySun\\.nuget\\packages\\nlog\\5.3.2\\nlog.5.3.2.nupkg.sha512",
+    "C:\\Users\\AmySun\\.nuget\\packages\\system.text.encodings.web\\8.0.0\\system.text.encodings.web.8.0.0.nupkg.sha512",
+    "C:\\Users\\AmySun\\.nuget\\packages\\system.text.json\\8.0.4\\system.text.json.8.0.4.nupkg.sha512"
   ],
   "logs": []
 }
